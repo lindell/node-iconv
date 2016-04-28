@@ -83,28 +83,30 @@ replace the last command with:
 ## Usage
 
 Encode from one character encoding to another:
+````javascript
+// convert from UTF-8 to ISO-8859-1
+var Buffer = require('buffer').Buffer;
+var Iconv  = require('iconv').Iconv;
+var assert = require('assert');
 
-    // convert from UTF-8 to ISO-8859-1
-    var Buffer = require('buffer').Buffer;
-    var Iconv  = require('iconv').Iconv;
-    var assert = require('assert');
-
-    var iconv = new Iconv('UTF-8', 'ISO-8859-1');
-    var buffer = iconv.convert('Hello, world!');
-    var buffer2 = iconv.convert(new Buffer('Hello, world!'));
-    assert.equals(buffer.inspect(), buffer2.inspect());
-    // do something useful with the buffers
+var iconv = new Iconv('UTF-8', 'ISO-8859-1');
+var buffer = iconv.convert('Hello, world!');
+var buffer2 = iconv.convert(new Buffer('Hello, world!'));
+assert.equals(buffer.inspect(), buffer2.inspect());
+// do something useful with the buffers
+````
 
 A simple ISO-8859-1 to UTF-8 conversion TCP service:
-
-    var net = require('net');
-    var Iconv = require('iconv').Iconv;
-    var server = net.createServer(function(conn) {
-      var iconv = new Iconv('latin1', 'utf-8');
-      conn.pipe(iconv).pipe(conn);
-    });
-    server.listen(8000);
-    console.log('Listening on tcp://0.0.0.0:8000/');
+````javascript
+var net = require('net');
+var Iconv = require('iconv').Iconv;
+var server = net.createServer(function(conn) {
+  var iconv = new Iconv('latin1', 'utf-8');
+  conn.pipe(iconv).pipe(conn);
+});
+server.listen(8000);
+console.log('Listening on tcp://0.0.0.0:8000/');
+````
 
 Look at test/test-basic.js and test/test-stream.js for more examples
 and node-iconv's behaviour under error conditions.
@@ -148,17 +150,19 @@ encountered but this can be customized. Quoting the `iconv_open(3)` man page:
 
 Example usage:
 
-    var iconv = new Iconv('UTF-8', 'ASCII');
-    iconv.convert('ça va'); // throws EILSEQ
+````javascript
+var iconv = new Iconv('UTF-8', 'ASCII');
+iconv.convert('ça va'); // throws EILSEQ
 
-    var iconv = new Iconv('UTF-8', 'ASCII//IGNORE');
-    iconv.convert('ça va'); // returns "a va"
+var iconv = new Iconv('UTF-8', 'ASCII//IGNORE');
+iconv.convert('ça va'); // returns "a va"
 
-    var iconv = new Iconv('UTF-8', 'ASCII//TRANSLIT');
-    iconv.convert('ça va'); // "ca va"
+var iconv = new Iconv('UTF-8', 'ASCII//TRANSLIT');
+iconv.convert('ça va'); // "ca va"
 
-    var iconv = new Iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE');
-    iconv.convert('ça va が'); // "ca va "
+var iconv = new Iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE');
+iconv.convert('ça va が'); // "ca va "
+````
 
 ### EINVAL
 
